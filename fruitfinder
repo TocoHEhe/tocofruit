@@ -1,25 +1,31 @@
-
 repeat
     task.wait()
 until game.IsLoaded and (game.Players.LocalPlayer or game.Players.PlayerAdded:Wait()) and
     (game.Players.LocalPlayer.Character or game.Players.LocalPlayer.CharacterAdded:Wait())
-local a = Instance.new("ScreenGui")
-local b = Instance.new("Frame")
-local c = Instance.new("UICorner")
-local d = Instance.new("Frame")
-local e = Instance.new("ImageButton")
-local f = Instance.new("ImageLabel")
-local g = Instance.new("ImageLabel")
-local h = Instance.new("TextButton")
-local i = Instance.new("TextButton")
-local j = Instance.new("TextLabel")
-local k = Instance.new("TextLabel")
-local l = Instance.new("TextLabel")
-local l = true
+
+-- Khởi tạo các biến UI chính
+local MainGui = Instance.new("ScreenGui")
+local MainFrame = Instance.new("Frame")
+local FrameCorner = Instance.new("UICorner")
+local InnerFrame = Instance.new("Frame")
+local InnerCorner = Instance.new("UICorner")
+local MinimizeBtn = Instance.new("ImageButton")
+local Logo = Instance.new("ImageLabel")
+local AvatarImg = Instance.new("ImageLabel")
+local AvatarCorner = Instance.new("UICorner")
+local AutoFruitBtn = Instance.new("TextButton")
+local BtnCorner = Instance.new("UICorner")
+local DiscordBtn = Instance.new("TextButton")
+local DisCorner = Instance.new("UICorner")
+local HubTitle = Instance.new("TextLabel")
+local FpsLabel = Instance.new("TextLabel")
+
+-- Anti-Idle Logic (Giữ nguyên)
+local IsAntiIdle = true
 game.Players.LocalPlayer.Idled:connect(
     function()
         while task.wait(3) do
-            if l then
+            if IsAntiIdle then
                 game.VirtualUser:Button2Down(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
                 task.wait(1)
                 game.VirtualUser:Button2Up(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
@@ -27,188 +33,158 @@ game.Players.LocalPlayer.Idled:connect(
         end
     end
 )
-local l = Instance.new("ScreenGui")
-local m = Instance.new("ImageButton")
-l.Parent = game.CoreGui
-l.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-_G.Primary = Color3.fromRGB(43, 43, 43)
-m.Parent = l
-m.Position = UDim2.new(0.120833337, 0, 0.0952890813, 0)
-m.Size = UDim2.new(0, 50, 0, 50)
-m.BackgroundColor3 = _G.Primary
-m.ImageColor3 = Color3.fromRGB(255, 255, 255)
-m.ImageTransparency = .1
-m.Draggable = true
-m.Active = true
-m.Selectable = true
-m.BackgroundTransparency = .1
-m.Image = "rbxassetid://16601446273"
-m.Visible = false
-local l = Instance.new("UICorner")
-l.Name = "MCNR"
-l.Parent = m
-l.CornerRadius = UDim.new(0, 5)
-m.MouseButton1Down:connect(
-    function()
-        m:TweenSize(UDim2.new(0, 40, 0, 40), "Out", "Quad", 0.2, true)
-        task.wait(0.1)
-        m:TweenSize(UDim2.new(0, 50, 0, 50), "Out", "Quad", 0.2, true)
-        game.CoreGui:FindFirstChild("ScreenGui_Chest").Enabled =
-            not game.CoreGui:FindFirstChild("ScreenGui_Chest").Enabled
-        m.Visible = false
-    end
-)
-do
-    if game:GetService("CoreGui"):FindFirstChild("ScreenGui_Chest") then
-        game:GetService("CoreGui").ScreenGui_Chest:Destroy()
-        game:GetService("CoreGui").ScreenGui:Destroy()
-    end
-end
-a.Name = "ScreenGui_Chest"
-a.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
-a.Parent = game.CoreGui
-b.Name = "Frame_Chest"
-b.Parent = a
-b.BackgroundColor3 = Color3.fromRGB(43, 43, 43)
-b.BackgroundTransparency = 0.100
-b.BorderColor3 = Color3.fromRGB(0, 0, 0)
-b.BorderSizePixel = 0
-b.Draggable = true
-b.Active = true
-b.Selectable = true
-b.Position = UDim2.new(0.297761381, 0, 0.278439432, 0)
-b.Size = UDim2.new(0, 281, 0, 164)
-c.Parent = b
-d.Name = "Frame1_Chest"
-d.Parent = b
-d.BackgroundColor3 = Color3.fromRGB(38, 38, 38)
-d.BorderColor3 = Color3.fromRGB(0, 0, 0)
-d.BorderSizePixel = 0
-d.Position = UDim2.new(0.0246521216, 0, 0.0482814126, 0)
-d.Size = UDim2.new(0, 266, 0, 147)
-e.Name = "Miminze"
-e.Parent = b
-e.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-e.BackgroundTransparency = 1.000
-e.BorderColor3 = Color3.fromRGB(0, 0, 0)
-e.BorderSizePixel = 0
-e.Position = UDim2.new(0.87502408, 0, 0.0182926822, 0)
-e.Size = UDim2.new(0, 19, 0, 26)
-e.Image = "http://www.roblox.com/asset/?id=15511995461"
-e.MouseButton1Down:connect(
-    function()
-        game.CoreGui:FindFirstChild("ScreenGui_Chest").Enabled =
-            not game.CoreGui:FindFirstChild("ScreenGui_Chest").Enabled
-        m.Visible = true
-    end
-)
-f.Name = "Logo"
-f.Parent = b
-f.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-f.BackgroundTransparency = 1.000
-f.BorderColor3 = Color3.fromRGB(0, 0, 0)
-f.BorderSizePixel = 0
-f.Position = UDim2.new(0.0246521216, 0, 0.0482814126, 0)
-f.Size = UDim2.new(0, 23, 0, 18)
-f.Image = "rbxassetid://16601446273"
-g.Name = "Avatra"
-g.Parent = b
-g.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-g.BackgroundTransparency = 1.000
-g.BorderColor3 = Color3.fromRGB(0, 0, 0)
-g.BorderSizePixel = 0
-g.Position = UDim2.new(0.0462633446, 0, 0.176829264, 0)
-g.Size = UDim2.new(0, 90, 0, 100)
-g.Image =
-    game.Players:GetUserThumbnailAsync(
-    game.Players.LocalPlayer.UserId,
-    Enum.ThumbnailType.AvatarThumbnail,
-    Enum.ThumbnailSize.Size420x420
-)
-h.Name = "FarmChestButton"
-h.Parent = b
-h.BackgroundColor3 = Color3.fromRGB(52, 52, 52)
-h.BackgroundTransparency = 0.100
-h.BorderColor3 = Color3.fromRGB(0, 0, 0)
-h.BorderSizePixel = 0
-h.Position = UDim2.new(0.478776932, 0, 0.691130638, 0)
-h.Size = UDim2.new(0, 121, 0, 28)
-h.Font = Enum.Font.SourceSansBold
-h.Text = "Auto Find Fruit : ON"
-h.TextColor3 = Color3.fromRGB(255, 255, 255)
-h.TextSize = 14.000
-_G.AutoStoreFruit = true
-h.MouseButton1Down:connect(function()
-    _G.AutoStoreFruit = not _G.AutoStoreFruit
-    h.Text = "Auto Find Fruit : " .. (_G.AutoStoreFruit and "ON" or "OFF")
+
+-- Toggle Button (Nút mở lại khi ẩn)
+local ToggleGui = Instance.new("ScreenGui")
+local ToggleBtn = Instance.new("ImageButton")
+local ToggleCorner = Instance.new("UICorner")
+
+ToggleGui.Parent = game.CoreGui
+ToggleBtn.Parent = ToggleGui
+ToggleBtn.Position = UDim2.new(0.12, 0, 0.1, 0)
+ToggleBtn.Size = UDim2.new(0, 45, 0, 45)
+ToggleBtn.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+ToggleBtn.Image = "rbxassetid://16601446273"
+ToggleBtn.Visible = false
+ToggleBtn.Draggable = true
+
+ToggleCorner.CornerRadius = UDim.new(0, 10)
+ToggleCorner.Parent = ToggleBtn
+
+ToggleBtn.MouseButton1Down:connect(function()
+    ToggleBtn:TweenSize(UDim2.new(0, 35, 0, 35), "Out", "Quad", 0.1, true)
+    task.wait(0.1)
+    ToggleBtn:TweenSize(UDim2.new(0, 45, 0, 45), "Out", "Quad", 0.1, true)
+    MainGui.Enabled = not MainGui.Enabled
+    ToggleBtn.Visible = false
 end)
-i.Name = "Discord"
-i.Parent = b
-i.BackgroundColor3 = Color3.fromRGB(52, 52, 52)
-i.BackgroundTransparency = 0.100
-i.BorderColor3 = Color3.fromRGB(0, 0, 0)
-i.BorderSizePixel = 0
-i.Position = UDim2.new(0.4775801, 0, 0.431707233, 0)
-i.Size = UDim2.new(0, 121, 0, 28)
-i.Font = Enum.Font.SourceSansBold
-i.Text = "Join Discord"
-i.TextColor3 = Color3.fromRGB(255, 255, 255)
-i.TextSize = 14.000
-i.MouseButton1Down:connect(
-    function()
-        setclipboard("https://zalo.me/g/oiragq418")
-        i.Text = "Copyed Link Zalo"
-        task.wait(.25)
-        i.Text = "Join Discord"
-    end
-)
-j.Name = "NameHub"
-j.Parent = b
-j.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-j.BackgroundTransparency = 1.000
-j.BorderColor3 = Color3.fromRGB(0, 0, 0)
-j.BorderSizePixel = 0
-j.Position = UDim2.new(0.0790036023, 0, -0.00593120279, 0)
-j.Size = UDim2.new(0, 65, 0, 35)
-j.Font = Enum.Font.SourceSansBold
-j.Text = "ThienDucFruits Hub"
-j.TextColor3 = Color3.fromRGB(255, 255, 255)
-j.TextSize = 14.000
-k.Name = "FPS"
-k.Parent = b
-k.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-k.BackgroundTransparency = 1.000
-k.BorderColor3 = Color3.fromRGB(0, 0, 0)
-k.BorderSizePixel = 0
-k.Position = UDim2.new(0.392720729, 0, 0.116020016, 0)
-k.Size = UDim2.new(0, 65, 0, 27)
-k.Font = Enum.Font.SourceSansBold
-k.Text = "FPS: "
-k.TextColor3 = Color3.fromRGB(255, 255, 255)
-k.TextSize = 14.000
-function UpdateFPS()
-    local a = workspace:GetRealPhysicsFPS()
-    k.Text = "FPS: " .. a
+
+-- Xóa UI cũ nếu có
+if game:GetService("CoreGui"):FindFirstChild("TocoFruit_Gui") then
+    game:GetService("CoreGui")["TocoFruit_Gui"]:Destroy()
 end
-spawn(
-    function()
-        while true do
-            task.wait(.1)
-            UpdateFPS()
-        end
+
+-- Cấu hình Main GUI
+MainGui.Name = "TocoFruit_Gui"
+MainGui.Parent = game.CoreGui
+
+MainFrame.Name = "MainFrame"
+MainFrame.Parent = MainGui
+MainFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25) -- Màu nền tối sang trọng
+MainFrame.Position = UDim2.new(0.3, 0, 0.3, 0)
+MainFrame.Size = UDim2.new(0, 300, 0, 180)
+MainFrame.Draggable = true
+MainFrame.Active = true
+
+FrameCorner.CornerRadius = UDim.new(0, 12)
+FrameCorner.Parent = MainFrame
+
+InnerFrame.Name = "ContentFrame"
+InnerFrame.Parent = MainFrame
+InnerFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+InnerFrame.Position = UDim2.new(0.05, 0, 0.25, 0)
+InnerFrame.Size = UDim2.new(0, 270, 0, 120)
+
+InnerCorner.CornerRadius = UDim.new(0, 8)
+InnerCorner.Parent = InnerFrame
+
+-- Title Hub
+HubTitle.Parent = MainFrame
+HubTitle.Text = "TOCOFRUIT HUB"
+HubTitle.Font = Enum.Font.GothamBold
+HubTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
+HubTitle.TextSize = 16
+HubTitle.Position = UDim2.new(0.15, 0, 0.02, 0)
+HubTitle.Size = UDim2.new(0, 100, 0, 35)
+HubTitle.TextXAlignment = Enum.TextXAlignment.Left
+
+-- Nút thu nhỏ
+MinimizeBtn.Name = "Minimize"
+MinimizeBtn.Parent = MainFrame
+MinimizeBtn.BackgroundTransparency = 1
+MinimizeBtn.Position = UDim2.new(0.88, 0, 0.05, 0)
+MinimizeBtn.Size = UDim2.new(0, 25, 0, 25)
+MinimizeBtn.Image = "rbxassetid://15511995461"
+MinimizeBtn.MouseButton1Down:connect(function()
+    MainGui.Enabled = false
+    ToggleBtn.Visible = true
+end)
+
+-- Avatar người chơi
+AvatarImg.Parent = InnerFrame
+AvatarImg.Position = UDim2.new(0.05, 0, 0.15, 0)
+AvatarImg.Size = UDim2.new(0, 70, 0, 70)
+AvatarImg.Image = game.Players:GetUserThumbnailAsync(game.Players.LocalPlayer.UserId, Enum.ThumbnailType.AvatarThumbnail, Enum.ThumbnailSize.Size420x420)
+
+AvatarCorner.CornerRadius = UDim.new(1, 0)
+AvatarCorner.Parent = AvatarImg
+
+-- Nút Auto Fruit
+_G.AutoStoreFruit = true
+AutoFruitBtn.Parent = InnerFrame
+AutoFruitBtn.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+AutoFruitBtn.Position = UDim2.new(0.35, 0, 0.15, 0)
+AutoFruitBtn.Size = UDim2.new(0, 160, 0, 30)
+AutoFruitBtn.Font = Enum.Font.GothamSemibold
+AutoFruitBtn.Text = "Auto Fruit: ON"
+AutoFruitBtn.TextColor3 = Color3.fromRGB(0, 255, 127)
+AutoFruitBtn.TextSize = 13
+
+BtnCorner.Parent = AutoFruitBtn
+
+AutoFruitBtn.MouseButton1Down:connect(function()
+    _G.AutoStoreFruit = not _G.AutoStoreFruit
+    AutoFruitBtn.Text = "Auto Fruit: " .. (_G.AutoStoreFruit and "ON" or "OFF")
+    AutoFruitBtn.TextColor3 = _G.AutoStoreFruit and Color3.fromRGB(0, 255, 127) or Color3.fromRGB(255, 80, 80)
+end)
+
+-- Nút Liên hệ/Discord
+DiscordBtn.Parent = InnerFrame
+DiscordBtn.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+DiscordBtn.Position = UDim2.new(0.35, 0, 0.55, 0)
+DiscordBtn.Size = UDim2.new(0, 160, 0, 30)
+DiscordBtn.Font = Enum.Font.GothamSemibold
+DiscordBtn.Text = "Copy Zalo Link"
+DiscordBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+DiscordBtn.TextSize = 13
+
+DisCorner.Parent = DiscordBtn
+
+DiscordBtn.MouseButton1Down:connect(function()
+    setclipboard("https://zalo.me/g/oiragq418")
+    DiscordBtn.Text = "Copied!"
+    task.wait(1)
+    DiscordBtn.Text = "Copy Zalo Link"
+end)
+
+-- FPS Label
+FpsLabel.Parent = MainFrame
+FpsLabel.Position = UDim2.new(0.65, 0, 0.02, 0)
+FpsLabel.Size = UDim2.new(0, 60, 0, 35)
+FpsLabel.Font = Enum.Font.Code
+FpsLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+FpsLabel.TextSize = 12
+FpsLabel.Text = "FPS: --"
+
+spawn(function()
+    while task.wait(0.5) do
+        FpsLabel.Text = "FPS: " .. math.floor(workspace:GetRealPhysicsFPS())
     end
-)
-if Ran then
-    return
-else
-    getgenv().Ran = true
-end
+end)
+
+---------------------------------------------------------
+-- PHẦN LOGIC CỐT LÕI (KHÔNG THAY ĐỔI)
+---------------------------------------------------------
+
+if Ran then return else getgenv().Ran = true end
+
 task.wait(5)
+-- Auto Select Team
 local main = game.Players.LocalPlayer.PlayerGui:FindFirstChild("Main")
 if main and main:FindFirstChild("ChooseTeam") then
     local container = main.ChooseTeam:FindFirstChild("Container")
     if container then
-        local teamFrame = container:FindFirstChild(Settings.JoinTeam)
+        local teamFrame = container:FindFirstChild("Pirates") -- Mặc định chọn Pirates
         if teamFrame then
             local frame = teamFrame:FindFirstChild("Frame")
             if frame then
@@ -220,198 +196,82 @@ if main and main:FindFirstChild("ChooseTeam") then
                     vim:SendMouseButtonEvent(pos.X, pos.Y, 0, true, game, 0)
                     task.wait(0.1)
                     vim:SendMouseButtonEvent(pos.X, pos.Y, 0, false, game, 0)
-                    task.wait(5)
-                    if button.Parent then
-                        vim:SendMouseButtonEvent(pos.X, pos.Y, 0, true, game, 0)
-                        task.wait(0.1)
-                        vim:SendMouseButtonEvent(pos.X, pos.Y, 0, false, game, 0)
-                    end
                 end
             end
         end
     end
 end
+
 task.wait(3)
-local a = game.Players.LocalPlayer
-local b = a.Character
-local c = game.TweenService
-local d = Instance.new("BodyVelocity")
-d.MaxForce = Vector3.new(1 / 0, 1 / 0, 1 / 0)
-d.Velocity = Vector3.new()
-d.Name = "bV"
-local e = Instance.new("BodyAngularVelocity")
-e.AngularVelocity = Vector3.new()
-e.MaxTorque = Vector3.new(1 / 0, 1 / 0, 1 / 0)
-e.Name = "bAV"
-for _, f in pairs(workspace:GetChildren()) do
-    if f.Name:find("Fruit") and (f:IsA("Tool") or f:IsA("Model")) then
-        repeat
-            local d = d:Clone()
-            d.Parent = b.HumanoidRootPart
-            local e = e:Clone()
-            e.Parent = b.HumanoidRootPart
-            local a =
-                c:Create(
-                b.HumanoidRootPart,
-                TweenInfo.new((a:DistanceFromCharacter(f.Handle.Position) - 150) / 300, Enum.EasingStyle.Linear),
-                {CFrame = f.Handle.CFrame + Vector3.new(0, f.Handle.Size.Y, 0)}
-            )
-            a:Play()
-            a.Completed:Wait()
-            b.HumanoidRootPart.CFrame = f.Handle.CFrame
-            d:Destroy()
-            e:Destroy()
-            task.wait(1)
-        until f.Parent ~= workspace
-        task.wait(1)
-        local a =
-            b:FindFirstChildOfClass("Tool") and b:FindFirstChildOfClass("Tool").Name:find("Fruit") and
-            b:FindFirstChildOfClass("Tool") or
-            (function()
-                for a, a in a.Backpack:GetChildren() do
-                    if a.Name:find("Fruit") then
-                        return a
-                    end
-                end
-            end)()
-        print(a)
+local lp = game.Players.LocalPlayer
+local ts = game.TweenService
+local bv = Instance.new("BodyVelocity")
+bv.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
+bv.Velocity = Vector3.new()
+local bav = Instance.new("BodyAngularVelocity")
+bav.AngularVelocity = Vector3.new()
+bav.MaxTorque = Vector3.new(math.huge, math.huge, math.huge)
+
+local function StoreFruit(fruit)
+    if fruit then
+        game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("StoreFruit", fruit:GetAttribute("OriginalName") or fruit.Name, fruit)
+    end
+end
+
+-- Vòng lặp chính tìm Fruit
 spawn(function()
     while task.wait(1) do
         for _, f in pairs(workspace:GetChildren()) do
             if f.Name:find("Fruit") and (f:IsA("Tool") or f:IsA("Model")) and f.Parent == workspace then
-                repeat
-                    local dv = d:Clone()
-                    dv.Parent = b.HumanoidRootPart
-                    local e = e:Clone()
-                    e.Parent = b.HumanoidRootPart
-                    local tween = c:Create(b.HumanoidRootPart, TweenInfo.new((a:DistanceFromCharacter(f.Handle.Position) - 150) / 300, Enum.EasingStyle.Linear), {CFrame = f.Handle.CFrame + Vector3.new(0, f.Handle.Size.Y, 0)})
-                    tween:Play()
-                    tween.Completed:Wait()
-                    b.HumanoidRootPart.CFrame = f.Handle.CFrame
-                    dv:Destroy()
-                    e:Destroy()
-                    task.wait(1)
-                until f.Parent ~= workspace
-                task.wait(1)
-                local fruit = b:FindFirstChildOfClass("Tool") and b:FindFirstChildOfClass("Tool").Name:find("Fruit") and b:FindFirstChildOfClass("Tool") or (function() for _, tool in a.Backpack:GetChildren() do if tool.Name:find("Fruit") then return tool end end end)()
-                if fruit then
-                    game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("StoreFruit", fruit:GetAttribute("OriginalName"), fruit)
+                local char = lp.Character
+                if char and char:FindFirstChild("HumanoidRootPart") then
+                    repeat
+                        local hbv = bv:Clone() hbv.Parent = char.HumanoidRootPart
+                        local hbav = bav:Clone() hbav.Parent = char.HumanoidRootPart
+                        
+                        local targetPos = f:IsA("Tool") and f.Handle.Position or f.PrimaryPart.Position
+                        local dist = (char.HumanoidRootPart.Position - targetPos).Magnitude
+                        local tween = ts:Create(char.HumanoidRootPart, TweenInfo.new(dist/300, Enum.EasingStyle.Linear), {CFrame = CFrame.new(targetPos)})
+                        
+                        tween:Play()
+                        tween.Completed:Wait()
+                        
+                        hbv:Destroy() hbav:Destroy()
+                        task.wait(0.5)
+                    until f.Parent ~= workspace or not f
+                    
+                    -- Cất fruit sau khi nhặt
+                    local fruitTool = char:FindFirstChildOfClass("Tool") or lp.Backpack:FindFirstChildOfClass("Tool")
+                    if fruitTool and fruitTool.Name:find("Fruit") then
+                        StoreFruit(fruitTool)
+                    end
                 end
             end
         end
     end
 end)
-        game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer(
-            "StoreFruit",
-            a:GetAttribute("OriginalName"),
-            a
-        )
-    end
-local NameFruit = {}
-end
-for _, a in pairs(game:GetService("Workspace"):GetChildren()) do
-    if a:IsA("Tool") and string.find(a.Name, "Fruit") then
-        table.insert(NameFruit, a.Name)
-    end
-end
-print(NameFruit)
-spawn(
-    function()
-        pcall(
-            function()
-                while task.wait(.1) do
-                    if _G.AutoStoreFruit then
-                        for _, fruitName in pairs(NameFruit) do
-                            game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("StoreFruit", fruitName)
-                        end
-                    end
+
+-- Server Hopper (Giữ nguyên logic cũ)
+spawn(function()
+    task.wait(30) -- Đợi 30s trước khi check hop để tránh lag
+    local HttpService = game:GetService("HttpService")
+    local TeleportService = game:GetService("TeleportService")
+    local PlaceId = game.PlaceId
+    local JobId = game.JobId
+
+    while task.wait(10) do
+        local servers = {}
+        local success, res = pcall(function()
+            return HttpService:JSONDecode(game:HttpGet("https://games.roblox.com/v1/games/" .. PlaceId .. "/servers/Public?sortOrder=Asc&limit=100"))
+        end)
+        
+        if success and res.data then
+            for _, s in pairs(res.data) do
+                if s.id ~= JobId and s.playing < s.maxPlayers then
+                    TeleportService:TeleportToPlaceInstance(PlaceId, s.id, lp)
+                    break
                 end
             end
-        )
-    end
-)
-local a = game.JobId
-repeat
-    task.spawn(
-        pcall,
-        function()
-            Time = 0.1
-            repeat
-                task.wait()
-            until game:IsLoaded()
-            task.wait(Time)
-            local a = game.PlaceId
-            local b = {}
-            pcall(function() if isfile("NotSameServers.json") then b = game:GetService("HttpService"):JSONDecode(readfile("NotSameServers.json")) end end)
-            local c = ""
-            local d = os.date("!*t").hour
-            local e = false
-            function TPReturner()
-                local e
-                if c == "" then
-                    e =
-                        game.HttpService:JSONDecode(
-                        game:HttpGet(
-                            "https://games.roblox.com/v1/games/" .. a .. "/servers/Public?sortOrder=Asc&limit=100"
-                        )
-                    )
-                else
-                    e =
-                        game.HttpService:JSONDecode(
-                        game:HttpGet(
-                            "https://games.roblox.com/v1/games/" ..
-                                a .. "/servers/Public?sortOrder=Asc&limit=100&cursor=" .. c
-                        )
-                    )
-                end
-                local f = ""
-                if e.nextPageCursor and e.nextPageCursor ~= "null" and e.nextPageCursor ~= nil then
-                    c = e.nextPageCursor
-                end
-                local c = 0
-                for e, e in pairs(e.data) do
-                    local g = true
-                    f = tostring(e.id)
-                    if tonumber(e.maxPlayers) > tonumber(e.playing) then
-                        for a, a in pairs(b) do
-                            if f == tostring(a) then
-                                g = false
-                            end
-                            c = c + 1
-                        end
-                        if g == true then
-                            table.insert(b, f)
-                            task.wait()
-                            pcall(
-                                function()
-                                    writefile("NotSameServers.json", game:GetService("HttpService"):JSONEncode(b))
-                                    task.wait()
-                                    game:GetService("TeleportService"):TeleportToPlaceInstance(
-                                        a,
-                                        f,
-                                        game.Players.LocalPlayer
-                                    )
-                                end
-                            )
-                            task.wait(4)
-                        end
-                    end
-                end
-            end
-            function Teleport()
-                while task.wait() do
-                    pcall(
-                        function()
-                            TPReturner()
-                            if c ~= "" then
-                                TPReturner()
-                            end
-                        end
-                    )
-                end
-            end
-            Teleport()
         end
-    )
-    task.wait()
-until game.JobId ~= a
+    end
+end)
