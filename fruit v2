@@ -1,4 +1,4 @@
--- TocoFruit Hub Premium Edition
+-- TocoFruit Hub - Smooth & Premium Edition
 repeat task.wait() until game:IsLoaded()
 
 local CoreGui = game:GetService("CoreGui")
@@ -8,207 +8,199 @@ local Http = game:GetService("HttpService")
 local TPS = game:GetService("TeleportService")
 local TweenService = game:GetService("TweenService")
 
--- Xóa UI cũ để làm mới hoàn toàn
-if CoreGui:FindFirstChild("TocoFruit_Premium") then
-    CoreGui.TocoFruit_Premium:Destroy()
+-- Xóa UI cũ để tránh bị chồng giao diện
+if CoreGui:FindFirstChild("TocoFruit_Final") then
+    CoreGui.TocoFruit_Final:Destroy()
 end
 
--- Cấu hình màu sắc sang trọng
-local Colors = {
+-- Bảng màu sang trọng (Dark Theme)
+local Theme = {
     Main = Color3.fromRGB(15, 15, 15),
-    Secondary = Color3.fromRGB(25, 25, 25),
-    Accent = Color3.fromRGB(0, 255, 200), -- Màu Cyan Neon
-    Text = Color3.fromRGB(240, 240, 240),
-    Grey = Color3.fromRGB(150, 150, 150)
+    Second = Color3.fromRGB(25, 25, 25),
+    Accent = Color3.fromRGB(0, 255, 150),
+    Text = Color3.fromRGB(255, 255, 255)
 }
 
 ---------------------------------------------------------
 -- 1. GIAO DIỆN (UI DESIGN)
 ---------------------------------------------------------
 local MainGui = Instance.new("ScreenGui")
-MainGui.Name = "TocoFruit_Premium"
+MainGui.Name = "TocoFruit_Final"
 MainGui.Parent = CoreGui
 
 local MainFrame = Instance.new("Frame")
-MainFrame.Size = UDim2.new(0, 350, 0, 200)
-MainFrame.Position = UDim2.new(0.5, -175, 0.5, -100)
-MainFrame.BackgroundColor3 = Colors.Main
+MainFrame.Size = UDim2.new(0, 340, 0, 190)
+MainFrame.Position = UDim2.new(0.5, -170, 0.5, -95)
+MainFrame.BackgroundColor3 = Theme.Main
 MainFrame.BorderSizePixel = 0
 MainFrame.Active = true
 MainFrame.Draggable = true
 MainFrame.Parent = MainGui
+Instance.new("UICorner", MainFrame).CornerRadius = UDim.new(0, 12)
 
--- Bo góc và đường viền sang trọng
-local MainCorner = Instance.new("UICorner", MainFrame)
-MainCorner.CornerRadius = UDim.new(0, 15)
+-- Viền ngoài sang trọng
+local Stroke = Instance.new("UIStroke", MainFrame)
+Stroke.Color = Theme.Second
+Stroke.Thickness = 2
 
-local MainStroke = Instance.new("UIStroke", MainFrame)
-MainStroke.Thickness = 2
-MainStroke.Color = Colors.Secondary
-MainStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-
--- Header Bar
-local Header = Instance.new("Frame")
-Header.Size = UDim2.new(1, 0, 0, 45)
-Header.BackgroundTransparency = 1
-Header.Parent = MainFrame
-
+-- Tiêu đề (Đã fix lỗi nền xám)
 local Title = Instance.new("TextLabel")
-Title.Size = UDim2.new(0.6, 0, 1, 0)
-Title.Position = UDim2.new(0.05, 0, 0, 0)
-Title.BackgroundTransparency = 1 -- Đã fix lỗi nền xám
+Title.Size = UDim2.new(0.6, 0, 0, 40)
+Title.Position = UDim2.new(0.05, 0, 0.02, 0)
+Title.BackgroundTransparency = 1
 Title.Text = "TOCOFRUIT HUB"
-Title.TextColor3 = Colors.Text
-Title.TextSize = 20
+Title.TextColor3 = Theme.Accent
+Title.TextSize = 18
 Title.Font = Enum.Font.GothamBold
 Title.TextXAlignment = Enum.TextXAlignment.Left
-Title.Parent = Header
+Title.Parent = MainFrame
 
-local FPS = Instance.new("TextLabel")
-FPS.Size = UDim2.new(0.3, 0, 1, 0)
-FPS.Position = UDim2.new(0.65, 0, 0, 0)
-FPS.BackgroundTransparency = 1 -- Đã fix lỗi nền xám
-FPS.Text = "FPS: 60"
-FPS.TextColor3 = Colors.Accent
-FPS.TextSize = 14
-FPS.Font = Enum.Font.Code
-FPS.Parent = Header
+-- FPS
+local FpsLabel = Instance.new("TextLabel")
+FpsLabel.Size = UDim2.new(0.3, 0, 0, 40)
+FpsLabel.Position = UDim2.new(0.65, 0, 0.02, 0)
+FpsLabel.BackgroundTransparency = 1
+FpsLabel.Text = "FPS: 60"
+FpsLabel.TextColor3 = Color3.fromRGB(150, 150, 150)
+FpsLabel.TextSize = 13
+FpsLabel.Font = Enum.Font.Code
+FpsLabel.Parent = MainFrame
 
--- Content Area
+-- Vùng nội dung
 local Content = Instance.new("Frame")
-Content.Size = UDim2.new(0.92, 0, 0.65, 0)
-Content.Position = UDim2.new(0.04, 0, 0.28, 0)
-Content.BackgroundColor3 = Colors.Secondary
+Content.Size = UDim2.new(0.9, 0, 0.65, 0)
+Content.Position = UDim2.new(0.05, 0, 0.28, 0)
+Content.BackgroundColor3 = Theme.Second
 Content.BorderSizePixel = 0
 Content.Parent = MainFrame
 Instance.new("UICorner", Content).CornerRadius = UDim.new(0, 10)
 
+-- Avatar
 local Avatar = Instance.new("ImageLabel")
-Avatar.Size = UDim2.new(0, 85, 0, 85)
+Avatar.Size = UDim2.new(0, 80, 0, 80)
 Avatar.Position = UDim2.new(0.05, 0, 0.12, 0)
-Avatar.BackgroundColor3 = Colors.Main
+Avatar.BackgroundTransparency = 1
 Avatar.Image = Players:GetUserThumbnailAsync(LP.UserId, Enum.ThumbnailType.AvatarThumbnail, Enum.ThumbnailSize.Size420x420)
 Avatar.Parent = Content
 Instance.new("UICorner", Avatar).CornerRadius = UDim.new(1, 0)
-local AvatarStroke = Instance.new("UIStroke", Avatar)
-AvatarStroke.Thickness = 2
-AvatarStroke.Color = Colors.Accent
+local AvStroke = Instance.new("UIStroke", Avatar)
+AvStroke.Color = Theme.Accent
+AvStroke.Thickness = 1.5
 
--- Buttons
-local function CreateButton(text, pos, parent)
-    local Btn = Instance.new("TextButton")
-    Btn.Size = UDim2.new(0, 160, 0, 38)
-    Btn.Position = pos
-    Btn.BackgroundColor3 = Colors.Main
-    Btn.Text = text
-    Btn.TextColor3 = Colors.Text
-    Btn.Font = Enum.Font.GothamSemibold
-    Btn.TextSize = 14
-    Btn.Parent = parent
-    
-    local btnCorner = Instance.new("UICorner", Btn)
-    btnCorner.CornerRadius = UDim.new(0, 8)
-    
-    local btnStroke = Instance.new("UIStroke", Btn)
-    btnStroke.Thickness = 1
-    btnStroke.Color = Colors.Secondary
-    
-    return Btn
+-- Nút bấm
+local function CreateBtn(txt, pos)
+    local b = Instance.new("TextButton")
+    b.Size = UDim2.new(0, 160, 0, 35)
+    b.Position = pos
+    b.BackgroundColor3 = Theme.Main
+    b.Text = txt
+    b.TextColor3 = Theme.Text
+    b.Font = Enum.Font.GothamSemibold
+    b.TextSize = 14
+    b.Parent = Content
+    Instance.new("UICorner", b).CornerRadius = UDim.new(0, 6)
+    local s = Instance.new("UIStroke", b)
+    s.Color = Color3.fromRGB(40, 40, 40)
+    return b
 end
 
-local AutoBtn = CreateButton("Auto Fruit: ON", UDim2.new(0.42, 0, 0.15, 0), Content)
-AutoBtn.TextColor3 = Colors.Accent
+local AutoBtn = CreateBtn("Auto Fruit: ON", UDim2.new(0.4, 0, 0.15, 0))
+AutoBtn.TextColor3 = Theme.Accent
 
-local ZaloBtn = CreateButton("Copy Zalo Link", UDim2.new(0.42, 0, 0.58, 0), Content)
+local ZaloBtn = CreateBtn("Copy Zalo Link", UDim2.new(0.4, 0, 0.55, 0))
 
 ---------------------------------------------------------
--- 2. LOGIC NÂNG CAO (SERVER HOP & AUTO)
+-- 2. LOGIC (TỐC ĐỘ BÌNH THƯỜNG & SERVER HOP)
 ---------------------------------------------------------
 _G.AutoStoreFruit = true
+local TravelSpeed = 250 -- Tốc độ vừa phải, mượt mà
 
+-- Hàm Server Hop (Fix lỗi thoát ra vô lại)
+local function SafeHop()
+    local url = "https://games.roblox.com/v1/games/" .. game.PlaceId .. "/servers/Public?sortOrder=Asc&limit=100"
+    local s, res = pcall(function() return game:HttpGet(url) end)
+    if s then
+        local data = Http:JSONDecode(res)
+        for _, server in pairs(data.data) do
+            if server.id ~= game.JobId and server.playing < server.maxPlayers then
+                pcall(function() TPS:TeleportToPlaceInstance(game.PlaceId, server.id, LP) end)
+                task.wait(1)
+            end
+        end
+    end
+end
+
+-- Vòng lặp Farm
+task.spawn(function()
+    while task.wait(1) do
+        if _G.AutoStoreFruit then
+            local targetFruit = nil
+            for _, v in pairs(workspace:GetChildren()) do
+                if v.Name:find("Fruit") and (v:IsA("Tool") or v:IsA("Model")) then
+                    targetFruit = v
+                    break
+                end
+            end
+
+            if targetFruit then
+                local char = LP.Character
+                if char and char:FindFirstChild("HumanoidRootPart") then
+                    local hrp = char.HumanoidRootPart
+                    local pos = targetFruit:IsA("Tool") and targetFruit.Handle.Position or targetFruit.PrimaryPart.Position
+                    
+                    -- BodyVelocity để chống rớt khi bay
+                    local bv = Instance.new("BodyVelocity", hrp)
+                    bv.MaxForce = Vector3.new(9e9, 9e9, 9e9)
+                    bv.Velocity = Vector3.new(0,0,0)
+                    
+                    local dist = (hrp.Position - pos).Magnitude
+                    local tween = TweenService:Create(hrp, TweenInfo.new(dist/TravelSpeed, Enum.EasingStyle.Linear), {CFrame = CFrame.new(pos)})
+                    tween:Play()
+                    tween.Completed:Wait()
+                    bv:Destroy()
+                    
+                    task.wait(0.5)
+                    -- Nhặt và cất
+                    local tool = char:FindFirstChildOfClass("Tool") or LP.Backpack:FindFirstChildOfClass("Tool")
+                    if tool and tool.Name:find("Fruit") then
+                        game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("StoreFruit", tool:GetAttribute("OriginalName") or tool.Name, tool)
+                    end
+                end
+            else
+                -- Không có fruit thì hop server
+                SafeHop()
+                task.wait(10)
+            end
+        end
+    end
+end)
+
+---------------------------------------------------------
+-- 3. TƯƠNG TÁC & TIỆN ÍCH
+---------------------------------------------------------
 AutoBtn.MouseButton1Down:Connect(function()
     _G.AutoStoreFruit = not _G.AutoStoreFruit
     AutoBtn.Text = "Auto Fruit: " .. (_G.AutoStoreFruit and "ON" or "OFF")
-    TweenService:Create(AutoBtn, TweenInfo.new(0.3), {
-        TextColor3 = _G.AutoStoreFruit and Colors.Accent or Color3.fromRGB(255, 80, 80)
-    }):Play()
+    AutoBtn.TextColor3 = _G.AutoStoreFruit and Theme.Accent or Color3.fromRGB(255, 80, 80)
 end)
 
 ZaloBtn.MouseButton1Down:Connect(function()
     setclipboard("https://zalo.me/g/oiragq418")
-    ZaloBtn.Text = "Link Copied!"
+    ZaloBtn.Text = "Copied!"
     task.wait(1)
     ZaloBtn.Text = "Copy Zalo Link"
 end)
 
--- Fix Server Hop (Unauthorized/Fail)
-local function ServerHop()
-    local url = "https://games.roblox.com/v1/games/" .. game.PlaceId .. "/servers/Public?sortOrder=Asc&limit=100"
-    local success, result = pcall(function() return game:HttpGet(url) end)
-    if success then
-        local data = Http:JSONDecode(result)
-        if data and data.data then
-            for _, s in pairs(data.data) do
-                if s.id ~= game.JobId and s.playing < s.maxPlayers then
-                    pcall(function() TPS:TeleportToPlaceInstance(game.PlaceId, s.id, LP) end)
-                    task.wait(0.5) -- Tránh spam request
-                end
-            end
-        end
-    end
-end
-
--- Vòng lặp Farm & Hop (Đã tối ưu hóa tránh lỗi)
-spawn(function()
-    while task.wait(1) do
-        if _G.AutoStoreFruit then
-            local fruitFound = false
-            for _, v in pairs(workspace:GetChildren()) do
-                if v.Name:find("Fruit") and (v:IsA("Tool") or v:IsA("Model")) then
-                    fruitFound = true
-                    local char = LP.Character
-                    if char and char:FindFirstChild("HumanoidRootPart") then
-                        local root = char.HumanoidRootPart
-                        local target = v:IsA("Tool") and v.Handle.Position or v.PrimaryPart.Position
-                        
-                        -- Hiệu ứng bay mượt
-                        local bv = Instance.new("BodyVelocity", root)
-                        bv.Velocity = Vector3.new(0,0,0)
-                        bv.MaxForce = Vector3.new(9e9, 9e9, 9e9)
-                        
-                        local dist = (root.Position - target).Magnitude
-                        local tween = TweenService:Create(root, TweenInfo.new(dist/350, Enum.EasingStyle.Linear), {CFrame = CFrame.new(target)})
-                        tween:Play()
-                        tween.Completed:Wait()
-                        bv:Destroy()
-                        
-                        task.wait(0.3)
-                        local tool = char:FindFirstChildOfClass("Tool") or LP.Backpack:FindFirstChildOfClass("Tool")
-                        if tool and tool.Name:find("Fruit") then
-                            game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("StoreFruit", tool:GetAttribute("OriginalName") or tool.Name, tool)
-                        end
-                    end
-                end
-            end
-            
-            if not fruitFound then
-                print("Server sạch bóng fruit, đang tìm server mới...")
-                ServerHop()
-                task.wait(5)
-            end
-        end
-    end
-end)
-
--- Anti-Idle & FPS Update
-spawn(function()
-    while task.wait(0.5) do
-        FPS.Text = "FPS: " .. math.floor(workspace:GetRealPhysicsFPS())
-    end
-end)
-
+-- Anti-Idle
 LP.Idled:Connect(function()
     game:GetService("VirtualUser"):Button2Down(Vector2.new(0,0), workspace.CurrentCamera.CFrame)
     task.wait(1)
     game:GetService("VirtualUser"):Button2Up(Vector2.new(0,0), workspace.CurrentCamera.CFrame)
+end)
+
+-- FPS counter
+task.spawn(function()
+    while task.wait(0.5) do
+        FpsLabel.Text = "FPS: " .. math.floor(workspace:GetRealPhysicsFPS())
+    end
 end)
