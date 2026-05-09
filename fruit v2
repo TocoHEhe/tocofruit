@@ -1,0 +1,277 @@
+repeat
+    task.wait()
+until game.IsLoaded and (game.Players.LocalPlayer or game.Players.PlayerAdded:Wait()) and
+    (game.Players.LocalPlayer.Character or game.Players.LocalPlayer.CharacterAdded:Wait())
+
+-- Khởi tạo các biến UI chính
+local MainGui = Instance.new("ScreenGui")
+local MainFrame = Instance.new("Frame")
+local FrameCorner = Instance.new("UICorner")
+local InnerFrame = Instance.new("Frame")
+local InnerCorner = Instance.new("UICorner")
+local MinimizeBtn = Instance.new("ImageButton")
+local Logo = Instance.new("ImageLabel")
+local AvatarImg = Instance.new("ImageLabel")
+local AvatarCorner = Instance.new("UICorner")
+local AutoFruitBtn = Instance.new("TextButton")
+local BtnCorner = Instance.new("UICorner")
+local DiscordBtn = Instance.new("TextButton")
+local DisCorner = Instance.new("UICorner")
+local HubTitle = Instance.new("TextLabel")
+local FpsLabel = Instance.new("TextLabel")
+
+-- Anti-Idle Logic (Giữ nguyên)
+local IsAntiIdle = true
+game.Players.LocalPlayer.Idled:connect(
+    function()
+        while task.wait(3) do
+            if IsAntiIdle then
+                game.VirtualUser:Button2Down(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
+                task.wait(1)
+                game.VirtualUser:Button2Up(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
+            end
+        end
+    end
+)
+
+-- Toggle Button (Nút mở lại khi ẩn)
+local ToggleGui = Instance.new("ScreenGui")
+local ToggleBtn = Instance.new("ImageButton")
+local ToggleCorner = Instance.new("UICorner")
+
+ToggleGui.Parent = game.CoreGui
+ToggleBtn.Parent = ToggleGui
+ToggleBtn.Position = UDim2.new(0.12, 0, 0.1, 0)
+ToggleBtn.Size = UDim2.new(0, 45, 0, 45)
+ToggleBtn.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+ToggleBtn.Image = "rbxassetid://16601446273"
+ToggleBtn.Visible = false
+ToggleBtn.Draggable = true
+
+ToggleCorner.CornerRadius = UDim.new(0, 10)
+ToggleCorner.Parent = ToggleBtn
+
+ToggleBtn.MouseButton1Down:connect(function()
+    ToggleBtn:TweenSize(UDim2.new(0, 35, 0, 35), "Out", "Quad", 0.1, true)
+    task.wait(0.1)
+    ToggleBtn:TweenSize(UDim2.new(0, 45, 0, 45), "Out", "Quad", 0.1, true)
+    MainGui.Enabled = not MainGui.Enabled
+    ToggleBtn.Visible = false
+end)
+
+-- Xóa UI cũ nếu có
+if game:GetService("CoreGui"):FindFirstChild("TocoFruit_Gui") then
+    game:GetService("CoreGui")["TocoFruit_Gui"]:Destroy()
+end
+
+-- Cấu hình Main GUI
+MainGui.Name = "TocoFruit_Gui"
+MainGui.Parent = game.CoreGui
+
+MainFrame.Name = "MainFrame"
+MainFrame.Parent = MainGui
+MainFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25) -- Màu nền tối sang trọng
+MainFrame.Position = UDim2.new(0.3, 0, 0.3, 0)
+MainFrame.Size = UDim2.new(0, 300, 0, 180)
+MainFrame.Draggable = true
+MainFrame.Active = true
+
+FrameCorner.CornerRadius = UDim.new(0, 12)
+FrameCorner.Parent = MainFrame
+
+InnerFrame.Name = "ContentFrame"
+InnerFrame.Parent = MainFrame
+InnerFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+InnerFrame.Position = UDim2.new(0.05, 0, 0.25, 0)
+InnerFrame.Size = UDim2.new(0, 270, 0, 120)
+
+InnerCorner.CornerRadius = UDim.new(0, 8)
+InnerCorner.Parent = InnerFrame
+
+-- Title Hub
+HubTitle.Parent = MainFrame
+HubTitle.Text = "TOCOFRUIT HUB"
+HubTitle.Font = Enum.Font.GothamBold
+HubTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
+HubTitle.TextSize = 16
+HubTitle.Position = UDim2.new(0.15, 0, 0.02, 0)
+HubTitle.Size = UDim2.new(0, 100, 0, 35)
+HubTitle.TextXAlignment = Enum.TextXAlignment.Left
+
+-- Nút thu nhỏ
+MinimizeBtn.Name = "Minimize"
+MinimizeBtn.Parent = MainFrame
+MinimizeBtn.BackgroundTransparency = 1
+MinimizeBtn.Position = UDim2.new(0.88, 0, 0.05, 0)
+MinimizeBtn.Size = UDim2.new(0, 25, 0, 25)
+MinimizeBtn.Image = "rbxassetid://15511995461"
+MinimizeBtn.MouseButton1Down:connect(function()
+    MainGui.Enabled = false
+    ToggleBtn.Visible = true
+end)
+
+-- Avatar người chơi
+AvatarImg.Parent = InnerFrame
+AvatarImg.Position = UDim2.new(0.05, 0, 0.15, 0)
+AvatarImg.Size = UDim2.new(0, 70, 0, 70)
+AvatarImg.Image = game.Players:GetUserThumbnailAsync(game.Players.LocalPlayer.UserId, Enum.ThumbnailType.AvatarThumbnail, Enum.ThumbnailSize.Size420x420)
+
+AvatarCorner.CornerRadius = UDim.new(1, 0)
+AvatarCorner.Parent = AvatarImg
+
+-- Nút Auto Fruit
+_G.AutoStoreFruit = true
+AutoFruitBtn.Parent = InnerFrame
+AutoFruitBtn.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+AutoFruitBtn.Position = UDim2.new(0.35, 0, 0.15, 0)
+AutoFruitBtn.Size = UDim2.new(0, 160, 0, 30)
+AutoFruitBtn.Font = Enum.Font.GothamSemibold
+AutoFruitBtn.Text = "Auto Fruit: ON"
+AutoFruitBtn.TextColor3 = Color3.fromRGB(0, 255, 127)
+AutoFruitBtn.TextSize = 13
+
+BtnCorner.Parent = AutoFruitBtn
+
+AutoFruitBtn.MouseButton1Down:connect(function()
+    _G.AutoStoreFruit = not _G.AutoStoreFruit
+    AutoFruitBtn.Text = "Auto Fruit: " .. (_G.AutoStoreFruit and "ON" or "OFF")
+    AutoFruitBtn.TextColor3 = _G.AutoStoreFruit and Color3.fromRGB(0, 255, 127) or Color3.fromRGB(255, 80, 80)
+end)
+
+-- Nút Liên hệ/Discord
+DiscordBtn.Parent = InnerFrame
+DiscordBtn.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+DiscordBtn.Position = UDim2.new(0.35, 0, 0.55, 0)
+DiscordBtn.Size = UDim2.new(0, 160, 0, 30)
+DiscordBtn.Font = Enum.Font.GothamSemibold
+DiscordBtn.Text = "Copy Zalo Link"
+DiscordBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+DiscordBtn.TextSize = 13
+
+DisCorner.Parent = DiscordBtn
+
+DiscordBtn.MouseButton1Down:connect(function()
+    setclipboard("https://zalo.me/g/oiragq418")
+    DiscordBtn.Text = "Copied!"
+    task.wait(1)
+    DiscordBtn.Text = "Copy Zalo Link"
+end)
+
+-- FPS Label
+FpsLabel.Parent = MainFrame
+FpsLabel.Position = UDim2.new(0.65, 0, 0.02, 0)
+FpsLabel.Size = UDim2.new(0, 60, 0, 35)
+FpsLabel.Font = Enum.Font.Code
+FpsLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+FpsLabel.TextSize = 12
+FpsLabel.Text = "FPS: --"
+
+spawn(function()
+    while task.wait(0.5) do
+        FpsLabel.Text = "FPS: " .. math.floor(workspace:GetRealPhysicsFPS())
+    end
+end)
+
+---------------------------------------------------------
+-- PHẦN LOGIC CỐT LÕI (KHÔNG THAY ĐỔI)
+---------------------------------------------------------
+
+if Ran then return else getgenv().Ran = true end
+
+task.wait(5)
+-- Auto Select Team
+local main = game.Players.LocalPlayer.PlayerGui:FindFirstChild("Main")
+if main and main:FindFirstChild("ChooseTeam") then
+    local container = main.ChooseTeam:FindFirstChild("Container")
+    if container then
+        local teamFrame = container:FindFirstChild("Pirates") -- Mặc định chọn Pirates
+        if teamFrame then
+            local frame = teamFrame:FindFirstChild("Frame")
+            if frame then
+                local button = frame:FindFirstChild("TextButton")
+                if button then
+                    task.wait(0.5)
+                    local vim = game:GetService("VirtualInputManager")
+                    local pos = button.AbsolutePosition + button.AbsoluteSize / 2
+                    vim:SendMouseButtonEvent(pos.X, pos.Y, 0, true, game, 0)
+                    task.wait(0.1)
+                    vim:SendMouseButtonEvent(pos.X, pos.Y, 0, false, game, 0)
+                end
+            end
+        end
+    end
+end
+
+task.wait(3)
+local lp = game.Players.LocalPlayer
+local ts = game.TweenService
+local bv = Instance.new("BodyVelocity")
+bv.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
+bv.Velocity = Vector3.new()
+local bav = Instance.new("BodyAngularVelocity")
+bav.AngularVelocity = Vector3.new()
+bav.MaxTorque = Vector3.new(math.huge, math.huge, math.huge)
+
+local function StoreFruit(fruit)
+    if fruit then
+        game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("StoreFruit", fruit:GetAttribute("OriginalName") or fruit.Name, fruit)
+    end
+end
+
+-- Vòng lặp chính tìm Fruit
+spawn(function()
+    while task.wait(1) do
+        for _, f in pairs(workspace:GetChildren()) do
+            if f.Name:find("Fruit") and (f:IsA("Tool") or f:IsA("Model")) and f.Parent == workspace then
+                local char = lp.Character
+                if char and char:FindFirstChild("HumanoidRootPart") then
+                    repeat
+                        local hbv = bv:Clone() hbv.Parent = char.HumanoidRootPart
+                        local hbav = bav:Clone() hbav.Parent = char.HumanoidRootPart
+                        
+                        local targetPos = f:IsA("Tool") and f.Handle.Position or f.PrimaryPart.Position
+                        local dist = (char.HumanoidRootPart.Position - targetPos).Magnitude
+                        local tween = ts:Create(char.HumanoidRootPart, TweenInfo.new(dist/300, Enum.EasingStyle.Linear), {CFrame = CFrame.new(targetPos)})
+                        
+                        tween:Play()
+                        tween.Completed:Wait()
+                        
+                        hbv:Destroy() hbav:Destroy()
+                        task.wait(0.5)
+                    until f.Parent ~= workspace or not f
+                    
+                    -- Cất fruit sau khi nhặt
+                    local fruitTool = char:FindFirstChildOfClass("Tool") or lp.Backpack:FindFirstChildOfClass("Tool")
+                    if fruitTool and fruitTool.Name:find("Fruit") then
+                        StoreFruit(fruitTool)
+                    end
+                end
+            end
+        end
+    end
+end)
+
+-- Server Hopper (Giữ nguyên logic cũ)
+spawn(function()
+    task.wait(30) -- Đợi 30s trước khi check hop để tránh lag
+    local HttpService = game:GetService("HttpService")
+    local TeleportService = game:GetService("TeleportService")
+    local PlaceId = game.PlaceId
+    local JobId = game.JobId
+
+    while task.wait(10) do
+        local servers = {}
+        local success, res = pcall(function()
+            return HttpService:JSONDecode(game:HttpGet("https://games.roblox.com/v1/games/" .. PlaceId .. "/servers/Public?sortOrder=Asc&limit=100"))
+        end)
+        
+        if success and res.data then
+            for _, s in pairs(res.data) do
+                if s.id ~= JobId and s.playing < s.maxPlayers then
+                    TeleportService:TeleportToPlaceInstance(PlaceId, s.id, lp)
+                    break
+                end
+            end
+        end
+    end
+end)
