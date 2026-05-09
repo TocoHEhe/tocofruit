@@ -1,277 +1,214 @@
--- Chờ game load hoàn tất
-repeat
-    task.wait()
-until game.IsLoaded and (game.Players.LocalPlayer or game.Players.PlayerAdded:Wait()) and
-    (game.Players.LocalPlayer.Character or game.Players.LocalPlayer.CharacterAdded:Wait())
+-- TocoFruit Hub Premium Edition
+repeat task.wait() until game:IsLoaded()
 
----------------------------------------------------------
--- 1. KHỞI TẠO GIAO DIỆN (UI) - ĐÃ FIX LỖI NỀN XÁM
----------------------------------------------------------
-local MainGui = Instance.new("ScreenGui")
-local MainFrame = Instance.new("Frame")
-local FrameCorner = Instance.new("UICorner")
-local InnerFrame = Instance.new("Frame")
-local InnerCorner = Instance.new("UICorner")
-local MinimizeBtn = Instance.new("ImageButton")
-local AvatarImg = Instance.new("ImageLabel")
-local AvatarCorner = Instance.new("UICorner")
-local AutoFruitBtn = Instance.new("TextButton")
-local BtnCorner = Instance.new("UICorner")
-local ZaloBtn = Instance.new("TextButton")
-local ZaloCorner = Instance.new("UICorner")
-local HubTitle = Instance.new("TextLabel")
-local FpsLabel = Instance.new("TextLabel")
+local CoreGui = game:GetService("CoreGui")
+local Players = game:GetService("Players")
+local LP = Players.LocalPlayer
+local Http = game:GetService("HttpService")
+local TPS = game:GetService("TeleportService")
+local TweenService = game:GetService("TweenService")
 
--- Xóa UI cũ nếu có để tránh lỗi
-if game:GetService("CoreGui"):FindFirstChild("TocoFruit_Gui") then
-    game:GetService("CoreGui")["TocoFruit_Gui"]:Destroy()
+-- Xóa UI cũ để làm mới hoàn toàn
+if CoreGui:FindFirstChild("TocoFruit_Premium") then
+    CoreGui.TocoFruit_Premium:Destroy()
 end
 
-MainGui.Name = "TocoFruit_Gui"
-MainGui.Parent = game.CoreGui
-MainGui.ResetOnSpawn = false
+-- Cấu hình màu sắc sang trọng
+local Colors = {
+    Main = Color3.fromRGB(15, 15, 15),
+    Secondary = Color3.fromRGB(25, 25, 25),
+    Accent = Color3.fromRGB(0, 255, 200), -- Màu Cyan Neon
+    Text = Color3.fromRGB(240, 240, 240),
+    Grey = Color3.fromRGB(150, 150, 150)
+}
 
--- Khung chính
-MainFrame.Name = "MainFrame"
-MainFrame.Parent = MainGui
-MainFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-MainFrame.Position = UDim2.new(0.3, 0, 0.3, 0)
-MainFrame.Size = UDim2.new(0, 320, 0, 180)
-MainFrame.Draggable = true
+---------------------------------------------------------
+-- 1. GIAO DIỆN (UI DESIGN)
+---------------------------------------------------------
+local MainGui = Instance.new("ScreenGui")
+MainGui.Name = "TocoFruit_Premium"
+MainGui.Parent = CoreGui
+
+local MainFrame = Instance.new("Frame")
+MainFrame.Size = UDim2.new(0, 350, 0, 200)
+MainFrame.Position = UDim2.new(0.5, -175, 0.5, -100)
+MainFrame.BackgroundColor3 = Colors.Main
+MainFrame.BorderSizePixel = 0
 MainFrame.Active = true
+MainFrame.Draggable = true
+MainFrame.Parent = MainGui
 
-FrameCorner.CornerRadius = UDim.new(0, 15)
-FrameCorner.Parent = MainFrame
+-- Bo góc và đường viền sang trọng
+local MainCorner = Instance.new("UICorner", MainFrame)
+MainCorner.CornerRadius = UDim.new(0, 15)
 
--- Tên Hub (Trong suốt nền)
-HubTitle.Parent = MainFrame
-HubTitle.Text = "TOCOFRUIT HUB"
-HubTitle.Font = Enum.Font.GothamBold
-HubTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
-HubTitle.TextSize = 18
-HubTitle.Position = UDim2.new(0.06, 0, 0.05, 0)
-HubTitle.Size = UDim2.new(0, 200, 0, 30)
-HubTitle.BackgroundTransparency = 1 -- FIX LỖI Ô XÁM
-HubTitle.TextXAlignment = Enum.TextXAlignment.Left
+local MainStroke = Instance.new("UIStroke", MainFrame)
+MainStroke.Thickness = 2
+MainStroke.Color = Colors.Secondary
+MainStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 
--- FPS (Trong suốt nền)
-FpsLabel.Parent = MainFrame
-FpsLabel.Position = UDim2.new(0.65, 0, 0.05, 0)
-FpsLabel.Size = UDim2.new(0, 60, 0, 30)
-FpsLabel.Font = Enum.Font.Code
-FpsLabel.TextColor3 = Color3.fromRGB(150, 150, 150)
-FpsLabel.TextSize = 14
-FpsLabel.BackgroundTransparency = 1 -- FIX LỖI Ô XÁM
-FpsLabel.Text = "FPS: 60"
+-- Header Bar
+local Header = Instance.new("Frame")
+Header.Size = UDim2.new(1, 0, 0, 45)
+Header.BackgroundTransparency = 1
+Header.Parent = MainFrame
 
--- Khung nội dung bên trong
-InnerFrame.Parent = MainFrame
-InnerFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-InnerFrame.Position = UDim2.new(0.05, 0, 0.25, 0)
-InnerFrame.Size = UDim2.new(0, 290, 0, 120)
+local Title = Instance.new("TextLabel")
+Title.Size = UDim2.new(0.6, 0, 1, 0)
+Title.Position = UDim2.new(0.05, 0, 0, 0)
+Title.BackgroundTransparency = 1 -- Đã fix lỗi nền xám
+Title.Text = "TOCOFRUIT HUB"
+Title.TextColor3 = Colors.Text
+Title.TextSize = 20
+Title.Font = Enum.Font.GothamBold
+Title.TextXAlignment = Enum.TextXAlignment.Left
+Title.Parent = Header
 
-InnerCorner.CornerRadius = UDim.new(0, 10)
-InnerCorner.Parent = InnerFrame
+local FPS = Instance.new("TextLabel")
+FPS.Size = UDim2.new(0.3, 0, 1, 0)
+FPS.Position = UDim2.new(0.65, 0, 0, 0)
+FPS.BackgroundTransparency = 1 -- Đã fix lỗi nền xám
+FPS.Text = "FPS: 60"
+FPS.TextColor3 = Colors.Accent
+FPS.TextSize = 14
+FPS.Font = Enum.Font.Code
+FPS.Parent = Header
 
--- Nút thu nhỏ
-MinimizeBtn.Parent = MainFrame
-MinimizeBtn.BackgroundTransparency = 1
-MinimizeBtn.Position = UDim2.new(0.88, 0, 0.07, 0)
-MinimizeBtn.Size = UDim2.new(0, 22, 0, 18)
-MinimizeBtn.Image = "rbxassetid://15511995461"
+-- Content Area
+local Content = Instance.new("Frame")
+Content.Size = UDim2.new(0.92, 0, 0.65, 0)
+Content.Position = UDim2.new(0.04, 0, 0.28, 0)
+Content.BackgroundColor3 = Colors.Secondary
+Content.BorderSizePixel = 0
+Content.Parent = MainFrame
+Instance.new("UICorner", Content).CornerRadius = UDim.new(0, 10)
 
--- Avatar người chơi
-AvatarImg.Parent = InnerFrame
-AvatarImg.Position = UDim2.new(0.05, 0, 0.15, 0)
-AvatarImg.Size = UDim2.new(0, 75, 0, 75)
-AvatarImg.BackgroundTransparency = 1
-AvatarImg.Image = game.Players:GetUserThumbnailAsync(game.Players.LocalPlayer.UserId, Enum.ThumbnailType.AvatarThumbnail, Enum.ThumbnailSize.Size420x420)
+local Avatar = Instance.new("ImageLabel")
+Avatar.Size = UDim2.new(0, 85, 0, 85)
+Avatar.Position = UDim2.new(0.05, 0, 0.12, 0)
+Avatar.BackgroundColor3 = Colors.Main
+Avatar.Image = Players:GetUserThumbnailAsync(LP.UserId, Enum.ThumbnailType.AvatarThumbnail, Enum.ThumbnailSize.Size420x420)
+Avatar.Parent = Content
+Instance.new("UICorner", Avatar).CornerRadius = UDim.new(1, 0)
+local AvatarStroke = Instance.new("UIStroke", Avatar)
+AvatarStroke.Thickness = 2
+AvatarStroke.Color = Colors.Accent
 
-AvatarCorner.CornerRadius = UDim.new(1, 0)
-AvatarCorner.Parent = AvatarImg
+-- Buttons
+local function CreateButton(text, pos, parent)
+    local Btn = Instance.new("TextButton")
+    Btn.Size = UDim2.new(0, 160, 0, 38)
+    Btn.Position = pos
+    Btn.BackgroundColor3 = Colors.Main
+    Btn.Text = text
+    Btn.TextColor3 = Colors.Text
+    Btn.Font = Enum.Font.GothamSemibold
+    Btn.TextSize = 14
+    Btn.Parent = parent
+    
+    local btnCorner = Instance.new("UICorner", Btn)
+    btnCorner.CornerRadius = UDim.new(0, 8)
+    
+    local btnStroke = Instance.new("UIStroke", Btn)
+    btnStroke.Thickness = 1
+    btnStroke.Color = Colors.Secondary
+    
+    return Btn
+end
 
--- Nút Auto Fruit
+local AutoBtn = CreateButton("Auto Fruit: ON", UDim2.new(0.42, 0, 0.15, 0), Content)
+AutoBtn.TextColor3 = Colors.Accent
+
+local ZaloBtn = CreateButton("Copy Zalo Link", UDim2.new(0.42, 0, 0.58, 0), Content)
+
+---------------------------------------------------------
+-- 2. LOGIC NÂNG CAO (SERVER HOP & AUTO)
+---------------------------------------------------------
 _G.AutoStoreFruit = true
-AutoFruitBtn.Parent = InnerFrame
-AutoFruitBtn.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
-AutoFruitBtn.Position = UDim2.new(0.38, 0, 0.15, 0)
-AutoFruitBtn.Size = UDim2.new(0, 165, 0, 35)
-AutoFruitBtn.Font = Enum.Font.GothamSemibold
-AutoFruitBtn.Text = "Auto Fruit: ON"
-AutoFruitBtn.TextColor3 = Color3.fromRGB(0, 255, 150)
-AutoFruitBtn.TextSize = 14
-BtnCorner.Parent = AutoFruitBtn
 
--- Nút Zalo
-ZaloBtn.Parent = InnerFrame
-ZaloBtn.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
-ZaloBtn.Position = UDim2.new(0.38, 0, 0.55, 0)
-ZaloBtn.Size = UDim2.new(0, 165, 0, 35)
-ZaloBtn.Font = Enum.Font.GothamSemibold
-ZaloBtn.Text = "Copy Zalo Link"
-ZaloBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-ZaloBtn.TextSize = 14
-ZaloCorner.Parent = ZaloBtn
-
----------------------------------------------------------
--- 2. LOGIC TƯƠNG TÁC UI
----------------------------------------------------------
-AutoFruitBtn.MouseButton1Down:connect(function()
+AutoBtn.MouseButton1Down:Connect(function()
     _G.AutoStoreFruit = not _G.AutoStoreFruit
-    AutoFruitBtn.Text = "Auto Fruit: " .. (_G.AutoStoreFruit and "ON" or "OFF")
-    AutoFruitBtn.TextColor3 = _G.AutoStoreFruit and Color3.fromRGB(0, 255, 150) or Color3.fromRGB(255, 80, 80)
+    AutoBtn.Text = "Auto Fruit: " .. (_G.AutoStoreFruit and "ON" or "OFF")
+    TweenService:Create(AutoBtn, TweenInfo.new(0.3), {
+        TextColor3 = _G.AutoStoreFruit and Colors.Accent or Color3.fromRGB(255, 80, 80)
+    }):Play()
 end)
 
-ZaloBtn.MouseButton1Down:connect(function()
+ZaloBtn.MouseButton1Down:Connect(function()
     setclipboard("https://zalo.me/g/oiragq418")
-    ZaloBtn.Text = "Copied Link!"
+    ZaloBtn.Text = "Link Copied!"
     task.wait(1)
     ZaloBtn.Text = "Copy Zalo Link"
 end)
 
--- Toggle Menu mở/đóng
-local ToggleBtn = Instance.new("ImageButton")
-local ToggleGui = Instance.new("ScreenGui")
-ToggleGui.Parent = game.CoreGui
-ToggleBtn.Parent = ToggleGui
-ToggleBtn.Size = UDim2.new(0, 45, 0, 45)
-ToggleBtn.Position = UDim2.new(0.1, 0, 0.1, 0)
-ToggleBtn.Visible = false
-ToggleBtn.Image = "rbxassetid://16601446273"
-ToggleBtn.BackgroundColor3 = Color3.fromRGB(30,30,30)
-Instance.new("UICorner", ToggleBtn).CornerRadius = UDim.new(0, 10)
-
-MinimizeBtn.MouseButton1Down:connect(function()
-    MainGui.Enabled = false
-    ToggleBtn.Visible = true
-end)
-
-ToggleBtn.MouseButton1Down:connect(function()
-    MainGui.Enabled = true
-    ToggleBtn.Visible = false
-end)
-
----------------------------------------------------------
--- 3. LOGIC CỐT LÕI (ANTI-IDLE, AUTO TEAM, FARM FRUIT)
----------------------------------------------------------
--- Anti-Idle
-game.Players.LocalPlayer.Idled:connect(function()
-    game:GetService("VirtualUser"):Button2Down(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
-    task.wait(1)
-    game:GetService("VirtualUser"):Button2Up(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
-end)
-
--- Tự động chọn team
-spawn(function()
-    task.wait(2)
-    local pGui = game.Players.LocalPlayer:WaitForChild("PlayerGui")
-    if pGui:FindFirstChild("Main") and pGui.Main:FindFirstChild("ChooseTeam") then
-        local btn = pGui.Main.ChooseTeam.Container.Pirates.Frame.TextButton
-        local pos = btn.AbsolutePosition + btn.AbsoluteSize / 2
-        game:GetService("VirtualInputManager"):SendMouseButtonEvent(pos.X, pos.Y, 0, true, game, 0)
-        task.wait(0.1)
-        game:GetService("VirtualInputManager"):SendMouseButtonEvent(pos.X, pos.Y, 0, false, game, 0)
-    end
-end)
-
--- FPS Update
-spawn(function()
-    while task.wait(0.5) do
-        FpsLabel.Text = "FPS: " .. math.floor(workspace:GetRealPhysicsFPS())
-    end
-end)
-
--- Auto Store Fruit Function
-local function StoreFruit(fruit)
-    if fruit and _G.AutoStoreFruit then
-        game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("StoreFruit", fruit:GetAttribute("OriginalName") or fruit.Name, fruit)
+-- Fix Server Hop (Unauthorized/Fail)
+local function ServerHop()
+    local url = "https://games.roblox.com/v1/games/" .. game.PlaceId .. "/servers/Public?sortOrder=Asc&limit=100"
+    local success, result = pcall(function() return game:HttpGet(url) end)
+    if success then
+        local data = Http:JSONDecode(result)
+        if data and data.data then
+            for _, s in pairs(data.data) do
+                if s.id ~= game.JobId and s.playing < s.maxPlayers then
+                    pcall(function() TPS:TeleportToPlaceInstance(game.PlaceId, s.id, LP) end)
+                    task.wait(0.5) -- Tránh spam request
+                end
+            end
+        end
     end
 end
 
--- Vòng lặp tìm Fruit
+-- Vòng lặp Farm & Hop (Đã tối ưu hóa tránh lỗi)
 spawn(function()
     while task.wait(1) do
         if _G.AutoStoreFruit then
-            for _, f in pairs(workspace:GetChildren()) do
-                if f.Name:find("Fruit") and (f:IsA("Tool") or f:IsA("Model")) and f.Parent == workspace then
-                    local char = game.Players.LocalPlayer.Character
+            local fruitFound = false
+            for _, v in pairs(workspace:GetChildren()) do
+                if v.Name:find("Fruit") and (v:IsA("Tool") or v:IsA("Model")) then
+                    fruitFound = true
+                    local char = LP.Character
                     if char and char:FindFirstChild("HumanoidRootPart") then
-                        local targetPos = f:IsA("Tool") and f.Handle.Position or f.PrimaryPart.Position
+                        local root = char.HumanoidRootPart
+                        local target = v:IsA("Tool") and v.Handle.Position or v.PrimaryPart.Position
                         
-                        -- Tạo BodyVelocity để bay tới
-                        local bv = Instance.new("BodyVelocity", char.HumanoidRootPart)
-                        bv.MaxForce = Vector3.new(9e9, 9e9, 9e9)
+                        -- Hiệu ứng bay mượt
+                        local bv = Instance.new("BodyVelocity", root)
                         bv.Velocity = Vector3.new(0,0,0)
+                        bv.MaxForce = Vector3.new(9e9, 9e9, 9e9)
                         
-                        local dist = (char.HumanoidRootPart.Position - targetPos).Magnitude
-                        local tween = game:GetService("TweenService"):Create(char.HumanoidRootPart, TweenInfo.new(dist/300, Enum.EasingStyle.Linear), {CFrame = CFrame.new(targetPos)})
-                        
+                        local dist = (root.Position - target).Magnitude
+                        local tween = TweenService:Create(root, TweenInfo.new(dist/350, Enum.EasingStyle.Linear), {CFrame = CFrame.new(target)})
                         tween:Play()
                         tween.Completed:Wait()
                         bv:Destroy()
                         
-                        task.wait(0.5)
-                        local fruitTool = char:FindFirstChildOfClass("Tool") or game.Players.LocalPlayer.Backpack:FindFirstChildOfClass("Tool")
-                        if fruitTool and fruitTool.Name:find("Fruit") then
-                            StoreFruit(fruitTool)
+                        task.wait(0.3)
+                        local tool = char:FindFirstChildOfClass("Tool") or LP.Backpack:FindFirstChildOfClass("Tool")
+                        if tool and tool.Name:find("Fruit") then
+                            game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("StoreFruit", tool:GetAttribute("OriginalName") or tool.Name, tool)
                         end
                     end
                 end
+            end
+            
+            if not fruitFound then
+                print("Server sạch bóng fruit, đang tìm server mới...")
+                ServerHop()
+                task.wait(5)
             end
         end
     end
 end)
 
----------------------------------------------------------
--- 4. LOGIC SERVER HOP (ĐÃ FIX LỖI KHÔNG HOP ĐƯỢC)
----------------------------------------------------------
-local function ServerHop()
-    local HttpService = game:GetService("HttpService")
-    local TeleportService = game:GetService("TeleportService")
-    local PlaceId = game.PlaceId
-    local JobId = game.JobId
-    
-    local cursor = ""
-    while true do
-        local url = "https://games.roblox.com/v1/games/" .. PlaceId .. "/servers/Public?sortOrder=Asc&limit=100"
-        if cursor ~= "" then url = url .. "&cursor=" .. cursor end
-        
-        local success, result = pcall(function() return game:HttpGet(url) end)
-        if success then
-            local data = HttpService:JSONDecode(result)
-            if data and data.data then
-                for _, server in pairs(data.data) do
-                    if server.id ~= JobId and server.playing < server.maxPlayers then
-                        TeleportService:TeleportToPlaceInstance(PlaceId, server.id, game.Players.LocalPlayer)
-                        return
-                    end
-                end
-                if data.nextPageCursor then 
-                    cursor = data.nextPageCursor 
-                else 
-                    break 
-                end
-            end
-        end
-        task.wait(0.1)
-    end
-end
-
--- Kiểm tra để Hop nếu không có Fruit
+-- Anti-Idle & FPS Update
 spawn(function()
-    while task.wait(10) do
-        local fruitFound = false
-        for _, obj in pairs(workspace:GetChildren()) do
-            if obj.Name:find("Fruit") then
-                fruitFound = true
-                break
-            end
-        end
-        
-        if not fruitFound and _G.AutoStoreFruit then
-            print("Server không có Fruit, đang nhảy Server...")
-            ServerHop()
-            task.wait(15) -- Tránh spam hop
-        end
+    while task.wait(0.5) do
+        FPS.Text = "FPS: " .. math.floor(workspace:GetRealPhysicsFPS())
     end
+end)
+
+LP.Idled:Connect(function()
+    game:GetService("VirtualUser"):Button2Down(Vector2.new(0,0), workspace.CurrentCamera.CFrame)
+    task.wait(1)
+    game:GetService("VirtualUser"):Button2Up(Vector2.new(0,0), workspace.CurrentCamera.CFrame)
 end)
